@@ -1,3 +1,23 @@
+## 📅 July 04, 2025
+
+#### Done
+
+- [App] Added basic FastAPI file
+  - Runs in dev mode and prints "hello world"
+
+#### Learned
+
+- FastAPI automatically creates a swagger at the location `/docs/
+  - Super handy for development!
+
+#### Blockers / Questions
+
+- Nothing today
+
+#### Next steps
+
+- Read more into how to use FastAPI
+
 ## 📅 July 03, 2025
 
 #### Done
