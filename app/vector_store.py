@@ -1,6 +1,5 @@
 import chromadb
 import pymupdf  # imports the pymupdf library
-import textwrap
 import nltk
 
 nltk.download("punkt_tab")
