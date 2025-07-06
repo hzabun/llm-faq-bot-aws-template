@@ -2,6 +2,28 @@
 
 #### Done
 
+- [App] Removed unused library
+- [Docs] Added roadmap to readme
+  - Split project into four phases
+- [Docs] Added placeholder license file
+  - Proper license will follow soon
+
+#### Learned
+
+- Nothing worth mentioning today
+
+#### Blockers / Questions
+
+- Nothing today
+
+#### Next steps
+
+- Set up OpenAI API or similar for quick experimenting before containerizing a local LLM
+
+## 📅 July 05, 2025
+
+#### Done
+
 - [App] Added PDF parser
   - Extracts each page of the PDF file
   - Converts pages to text
