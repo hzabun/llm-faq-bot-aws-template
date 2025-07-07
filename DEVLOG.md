@@ -16,7 +16,7 @@
 
 #### Next steps
 
-- S
+- Connect ChromaDB to model queries
 
 ## 📅 July 06, 2025
 
