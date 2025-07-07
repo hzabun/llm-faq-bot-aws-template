@@ -1,4 +1,24 @@
-## 📅 July 05, 2025
+#### Done
+
+- [App] Added gemini API for basic local MVP testing
+  - Gemini offers a free tier perfect for quick dev testing
+- [Docs] Added proper MIT license
+- [Docs] added environment files to gitignore
+
+#### Learned
+
+- Function `Field` can be used to define validation rules on attributes
+  - E.g. minimum length of a prompt parameter must be 1
+
+#### Blockers / Questions
+
+- Nothing today
+
+#### Next steps
+
+- S
+
+## 📅 July 06, 2025
 
 #### Done
 
