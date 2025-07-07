@@ -1,8 +1,11 @@
-# python files
-__pycache__
+# Byte-compiled / optimized / DLL files
+__pycache__/
 
-# local documents
-documents
+# User-specific files
+.DS_Store
 
-# Auto-generated files
-.DS_store
+# Local project files
+documents/
+
+# Environment & secrets
+secrets.env
