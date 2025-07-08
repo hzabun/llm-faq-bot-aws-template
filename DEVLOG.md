@@ -1,3 +1,26 @@
+## 📅 July 08, 2025
+
+#### Done
+
+- [App] Connected ChoromaDB to model queries
+  - When starting the app, vector store gets initialized and parses the PDF
+  - Upon queries, results from the vector store are provided as context string
+
+#### Learned
+
+- FastAPI events `startup` and `shutdown` are deprecated
+  - Apparently recommended to use `lifespan` function
+
+#### Blockers / Questions
+
+- Nothing today
+
+#### Next steps
+
+- Create persistent ChromaDB client to store embeddings locally for lower latency
+
+## 📅 July 07, 2025
+
 #### Done
 
 - [App] Added gemini API for basic local MVP testing
