@@ -1,19 +1,17 @@
-import chromadb
-import pymupdf  # imports the pymupdf library
-import nltk
+import logging
 
-nltk.download("punkt_tab")
+import chromadb
+import nltk
+import pymupdf  # imports the pymupdf library
 from nltk.tokenize import sent_tokenize
 
-import logging
+nltk.download("punkt_tab")
 
 logging.basicConfig(level=logging.INFO)
 
 # setup Chroma in-memory, for easy prototyping
 client = chromadb.Client()
-
 collection = client.create_collection("sample-collection")
-
 chunk_size = 500  # number of characters per chunk
 
 
@@ -32,26 +30,32 @@ def semantic_chunk_text(text, max_tokens=500):
     return chunks
 
 
-doc = pymupdf.open("documents/calypso_paper.pdf")
-chunk_id = 1
+def initialize_vector_store(pdf_path="../documents/calypso_paper.pdf"):
+    if collection.count() > 0:
+        logging.info("Vectore store already initialized.")
+        return
 
-for page_num, page in enumerate(doc, start=1):
-    text = page.get_text()
-    chunks = semantic_chunk_text(text, chunk_size)
-    for chunk in chunks:
-        clean_chunk = chunk.replace("\n", " ").strip()
-        collection.add(
-            documents=[clean_chunk],
-            ids=[f"id{chunk_id}"],
-            metadatas=[{"page": page_num}],
-        )
-        logging.info(f"Added chunk {chunk_id} from page {page_num}")
-        chunk_id += 1
+    doc = pymupdf.open(pdf_path)
+    chunk_id = 1
+    for page_num, page in enumerate(doc, start=1):
+        text = page.get_text()
+        chunks = semantic_chunk_text(text, chunk_size)
+        for chunk in chunks:
+            clean_chunk = chunk.replace("\n", " ").strip()
+            collection.add(
+                documents=[clean_chunk],
+                ids=[f"id{chunk_id}"],
+                metadatas=[{"page": page_num}],
+            )
+            logging.info(f"Added chunk {chunk_id} from page {page_num}")
+            chunk_id += 1
+    logging.info("Vector store initialized.")
 
-# query most similar results
-results = collection.query(
-    query_texts=["What prompt engineering methods are used in CALYPSO?"],
-    n_results=3,
-)
 
-print(results)
+def query_vector_store(query, n_results=3):
+    # query most similar results
+    results = collection.query(
+        query_texts=[query],
+        n_results=n_results,
+    )
+    return results["documents"][0] if results and "documents" in results else []
