@@ -10,8 +10,8 @@ nltk.download("punkt_tab")
 logging.basicConfig(level=logging.INFO)
 
 # setup Chroma in-memory, for easy prototyping
-client = chromadb.Client()
-collection = client.create_collection("sample-collection")
+client = chromadb.PersistentClient(path="./chromadb_client")
+collection = client.get_or_create_collection("sample-collection")
 chunk_size = 500  # number of characters per chunk
 
 
