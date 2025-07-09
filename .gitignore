@@ -6,6 +6,7 @@ __pycache__/
 
 # Local project files
 documents/
+chromadb_client
 
 # Environment & secrets
 secrets.env
