@@ -1,3 +1,23 @@
+## 📅 July 09, 2025
+
+#### Done
+
+- [App] Converted ChromaDB client to a persistent one
+  - When starting the app, it now reuses the existing vectore store
+
+#### Learned
+
+- Nothing worth mentioning today
+
+#### Blockers / Questions
+
+- I wonder how it would make most sense to initialize the chromadb client within a container
+  - Persistent client? Remote client?
+
+#### Next steps
+
+- Update readme and get started with next phase
+
 ## 📅 July 08, 2025
 
 #### Done
