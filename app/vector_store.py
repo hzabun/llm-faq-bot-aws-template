@@ -2,20 +2,25 @@ import logging
 
 import chromadb
 import nltk
-import pymupdf  # imports the pymupdf library
+import pymupdf  # PDF processing library
 from nltk.tokenize import sent_tokenize
 
+# Download NLTK sentence tokenizer if not already present
 nltk.download("punkt_tab")
 
 logging.basicConfig(level=logging.INFO)
 
-# setup Chroma in-memory, for easy prototyping
+# Setup Chroma persistent client for vector storage
 client = chromadb.PersistentClient(path="./chromadb_client")
 collection = client.get_or_create_collection("sample-collection")
-chunk_size = 500  # number of characters per chunk
+chunk_size = 500  # Number of characters per chunk
 
 
 def semantic_chunk_text(text, max_tokens=500):
+    """
+    Split text into chunks of approximately max_tokens characters,
+    using sentence boundaries for better semantic coherence.
+    """
     sentences = sent_tokenize(text)
     chunks = []
     current_chunk = ""
@@ -31,8 +36,12 @@ def semantic_chunk_text(text, max_tokens=500):
 
 
 def initialize_vector_store(pdf_path="../documents/calypso_paper.pdf"):
+    """
+    Initialize the vector store by loading and chunking a given PDF document.
+    Skips initialization if already populated.
+    """
     if collection.count() > 0:
-        logging.info("Vectore store already initialized.")
+        logging.info("Vector store already initialized.")
         return
 
     doc = pymupdf.open(pdf_path)
@@ -53,7 +62,16 @@ def initialize_vector_store(pdf_path="../documents/calypso_paper.pdf"):
 
 
 def query_vector_store(query, n_results=3):
-    # query most similar results
+    """
+    Query the vector store for the most semantically similar document chunks.
+
+    Args:
+        query (str): The search query text
+        n_results (int): Number of results to return (default: 3)
+
+    Returns:
+        list[str]: List of document chunks most similar to the query
+    """
     results = collection.query(
         query_texts=[query],
         n_results=n_results,
