@@ -1,3 +1,22 @@
+## 📅 July 10, 2025
+
+#### Done
+
+- [Docs] Added docstrings to public, more complex functions
+- [Docs] Ticket off local MVP phase of the project
+
+#### Learned
+
+- Nothing worth mentioning today
+
+#### Blockers / Questions
+
+- Nothing today
+
+#### Next steps
+
+- Continue with test deployment on AWS
+
 ## 📅 July 09, 2025
 
 #### Done
