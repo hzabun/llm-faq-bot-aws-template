@@ -6,7 +6,7 @@ Deploy your own internal chatbot powered by open-source LLMs, FastAPI, and AWS F
 
 ## Roadmap
 
-- [ ] Create local MVP (FastAPI + ChromaDB)
+- [x] Create local MVP (FastAPI + ChromaDB)
 - [ ] Test deploy on AWS (ECS Fargate)
 - [ ] Swap to Ollama (Local LLM support)
 - [ ] Polish + extend (CI/CD, monitoring/logging)
