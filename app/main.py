@@ -16,7 +16,7 @@ client = genai.Client()
 class QueryRequest(BaseModel):
     """Request model for /ask endpoint."""
 
-    prompt: str = Field(..., min_length=1, description="The prompt to send to Gemini")
+    prompt: str = Field(min_length=1, description="The prompt to send to Gemini")
 
 
 class QueryResponse(BaseModel):
