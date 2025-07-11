@@ -1,3 +1,22 @@
+## 📅 July 11, 2025
+
+#### Done
+
+- [App] Added dependencies via requirements.txt
+- [DevOps] Added initial version of dockerfile
+
+#### Learned
+
+- PDF processing libraries like PyMuPDF require MuPDF to be installed in the OS
+
+#### Blockers / Questions
+
+- Running containerized app not working yet, need to API key within the container
+
+#### Next steps
+
+- Find a secure way to provide API key within the container
+
 ## 📅 July 10, 2025
 
 #### Done
