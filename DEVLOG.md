@@ -1,3 +1,26 @@
+## 📅 July 12, 2025
+
+#### Done
+
+- [DevOps] Ran containerized app successfully
+  - Gemini API key provided as environment variable
+- [Docs] Created snippets folder and added to gitignore
+  - Folder contains frequently used commands for local development
+
+#### Learned
+
+- Fixed issue with providing gemini API key within the container
+  - For local dev: embed environment variable at container startup
+  - For AWS deployment: use AWS Parameter Store or Secrets Manager
+
+#### Blockers / Questions
+
+- Nothing today
+
+#### Next steps
+
+- Set up ECS infrastructure via Terraform
+
 ## 📅 July 11, 2025
 
 #### Done
