@@ -3,6 +3,7 @@ __pycache__/
 
 # User-specific files
 .DS_Store
+snippets
 
 # Local project files
 documents/
