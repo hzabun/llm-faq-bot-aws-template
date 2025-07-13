@@ -1,3 +1,33 @@
+## 📅 July 13, 2025
+
+#### Done
+
+- [App] Added markdown file parsing and processing
+- [App] Converted the app to use LangChain for document parsing, chunking, and vectore store configuration
+  - LangChain is a popular framework for LLMs and well-tested
+  - No need to reinvent the wheel
+  - Will also be needed for AI agents later in the project
+- [DevOps] Converted the Dockerfile to multi-stage build
+  - Preparation for the containerization soon
+  - Goal is to keep the image size low
+
+#### Learned
+
+- LangChain uses a convenient abstract schema called "Document"
+  - Makes it easy to use functions like `load()` on PDF and markdown files
+- LangChain library `UnstructuredMarkdownLoader` very convenient for markdown files
+  - Can parse MD files based on elements, like headers or lists
+
+#### Blockers / Questions
+
+- I wonder how big the docker image will be with langchain library introduced now
+
+#### Next steps
+
+- Set a specific embedding model for chroma
+- Test run the langchain version locally
+- Write pytest for the functions
+
 ## 📅 July 12, 2025
 
 #### Done
