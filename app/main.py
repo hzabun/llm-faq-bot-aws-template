@@ -1,16 +1,45 @@
 from contextlib import asynccontextmanager
+from typing import Annotated
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from google import genai
 from pydantic import BaseModel, Field
-from vector_store import initialize_vector_store, query_vector_store
+from langchain_chroma import Chroma
+from langchain_integration import initialize_vector_store
 
 # Load environment variables from .env file (for Gemini API key)
 load_dotenv("../secrets.env")
 
 # Initialize Gemini client
 client = genai.Client()
+
+
+class VectorStoreManager:
+    """Manages the vector store instance."""
+
+    def __init__(self):
+        self._vectorstore: Chroma = None
+
+    # Initialize the vector store
+    def initialize(self, directory_path: str = "../documents/"):
+        self._vectorstore = initialize_vector_store(directory_path)
+        if self._vectorstore is None:
+            raise RuntimeError("Failed to initialize vector store")
+
+    # Get the vector store instance
+    def get_vectorstore(self) -> Chroma:
+        if self._vectorstore is None:
+            raise RuntimeError("Vector store not initialized")
+        return self._vectorstore
+
+    # Check if vector store is initialized
+    def is_initialized(self) -> bool:
+        return self._vectorstore is not None
+
+
+# Create vector store manager instance
+vector_store_manager = VectorStoreManager()
 
 
 class QueryRequest(BaseModel):
@@ -25,10 +54,16 @@ class QueryResponse(BaseModel):
     response: str
 
 
+# Dependency to get the vector store instance
+def get_vector_store() -> Chroma:
+    return vector_store_manager.get_vectorstore()
+
+
+# Lifespan event handler to initialize resources at startup
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Lifespan event handler to initialize resources at startup."""
-    initialize_vector_store()  # Initialize vector store at startup
+    # Initialize vector store at startup
+    vector_store_manager.initialize("../documents/")
     yield
 
 
@@ -43,12 +78,15 @@ def read_root():
 
 
 @app.post("/ask", response_model=QueryResponse)
-def ask_gemini(query: QueryRequest):
+def ask_gemini(
+    query: QueryRequest, vectorstore: Annotated[Chroma, Depends(get_vector_store)]
+):
     """
     Endpoint to send a prompt to Gemini using context from the vector store.
 
     Args:
         query: QueryRequest containing the user's prompt
+        vectorstore: Vector store instance injected via dependency
 
     Returns:
         QueryResponse with the generated response from Gemini
@@ -58,7 +96,10 @@ def ask_gemini(query: QueryRequest):
     """
     try:
         # Retrieve relevant context chunks from the vector store
-        context_chunks = query_vector_store(query.prompt, n_results=3)
+        results = vectorstore.similarity_search(query.prompt, k=3)
+
+        # Extract content from the results
+        context_chunks = [result.page_content for result in results]
         context = "\n".join(context_chunks)
 
         # Construct the full prompt for the Gemini model
@@ -72,3 +113,12 @@ def ask_gemini(query: QueryRequest):
     except Exception as e:
         # Log the error and return a 500 error response
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
+# Extended health check that includes vector store status
+@app.get("/health")
+def health_check():
+    return {
+        "status": "healthy",
+        "vector_store_initialized": vector_store_manager.is_initialized(),
+    }
