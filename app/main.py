@@ -5,11 +5,12 @@ from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException
 from google import genai
 from langchain_chroma import Chroma
-from langchain_integration import initialize_vector_store
 from pydantic import BaseModel, Field
 
+from app.langchain_integration import initialize_vector_store
+
 # Load environment variables for Gemini API key
-load_dotenv("../secrets.env")
+load_dotenv("./secrets.env")
 
 client = genai.Client()
 
@@ -20,7 +21,7 @@ class VectorStoreManager:
     def __init__(self):
         self._vectorstore: Chroma = None
 
-    def initialize(self, directory_path: str = "../documents/"):
+    def initialize(self, directory_path: str = "./documents/"):
         self._vectorstore = initialize_vector_store(directory_path)
         if self._vectorstore is None:
             raise RuntimeError("Failed to initialize vector store")
@@ -56,21 +57,21 @@ def get_vector_store() -> Chroma:
 
 # Lifespan event handler to initialize resources at startup
 @asynccontextmanager
-async def lifespan(app: FastAPI):
-    vector_store_manager.initialize("../documents/")
+async def lifespan(faq_app: FastAPI):
+    vector_store_manager.initialize("./documents/")
     yield
 
 
-app = FastAPI(lifespan=lifespan)
+faq_app = FastAPI(lifespan=lifespan)
 
 
-@app.get("/")
+@faq_app.get("/")
 def read_root():
     """Health check endpoint."""
     return {"Hello": "World"}
 
 
-@app.post("/ask", response_model=QueryResponse)
+@faq_app.post("/ask", response_model=QueryResponse)
 def ask_gemini(
     query: QueryRequest, vectorstore: Annotated[Chroma, Depends(get_vector_store)]
 ):
@@ -108,7 +109,7 @@ def ask_gemini(
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
-@app.get("/health")
+@faq_app.get("/health")
 def health_check():
     return {
         "status": "healthy",
