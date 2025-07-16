@@ -2,16 +2,15 @@ from contextlib import asynccontextmanager
 from typing import Annotated
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import Depends, FastAPI, HTTPException
 from google import genai
-from pydantic import BaseModel, Field
 from langchain_chroma import Chroma
 from langchain_integration import initialize_vector_store
+from pydantic import BaseModel, Field
 
-# Load environment variables from .env file (for Gemini API key)
+# Load environment variables for Gemini API key
 load_dotenv("../secrets.env")
 
-# Initialize Gemini client
 client = genai.Client()
 
 
@@ -21,24 +20,20 @@ class VectorStoreManager:
     def __init__(self):
         self._vectorstore: Chroma = None
 
-    # Initialize the vector store
     def initialize(self, directory_path: str = "../documents/"):
         self._vectorstore = initialize_vector_store(directory_path)
         if self._vectorstore is None:
             raise RuntimeError("Failed to initialize vector store")
 
-    # Get the vector store instance
     def get_vectorstore(self) -> Chroma:
         if self._vectorstore is None:
             raise RuntimeError("Vector store not initialized")
         return self._vectorstore
 
-    # Check if vector store is initialized
     def is_initialized(self) -> bool:
         return self._vectorstore is not None
 
 
-# Create vector store manager instance
 vector_store_manager = VectorStoreManager()
 
 
@@ -62,12 +57,10 @@ def get_vector_store() -> Chroma:
 # Lifespan event handler to initialize resources at startup
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize vector store at startup
     vector_store_manager.initialize("../documents/")
     yield
 
 
-# Create FastAPI app with lifespan handler
 app = FastAPI(lifespan=lifespan)
 
 
@@ -115,7 +108,6 @@ def ask_gemini(
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
-# Extended health check that includes vector store status
 @app.get("/health")
 def health_check():
     return {
