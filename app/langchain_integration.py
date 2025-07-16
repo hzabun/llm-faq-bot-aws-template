@@ -2,10 +2,11 @@ import logging
 from pathlib import Path
 from typing import List
 
-from langchain_community.document_loaders import PyPDFLoader, UnstructuredMarkdownLoader
+from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
-from langchain.schema import Document
+from langchain_community.document_loaders import PyPDFLoader, UnstructuredMarkdownLoader
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 logging.basicConfig(level=logging.INFO)
 
@@ -50,9 +51,14 @@ def initialize_vector_store(directory_path: str = "../documents/") -> Chroma:
     )
     chunks = text_splitter.split_documents(docs)
 
-    # Create vector store
+    embedding_model = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
+
     vectorstore = Chroma.from_documents(
-        documents=chunks, persist_directory="./chromadb_client"
+        documents=chunks,
+        embedding=embedding_model,
+        persist_directory="./chromadb_client",
     )
 
     logging.info(
