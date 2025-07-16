@@ -1,3 +1,25 @@
+## 📅 July 16, 2025
+
+#### Done
+
+- [App] Added initial basic tests for the app
+- [App] Also added a specific embedding model to make sure the explicit same one is used later in the containers
+- [Docs] Sorted imports and removed unnecessary comments from the python scripts
+
+#### Learned
+
+- LangChain is still quite big and has so many different rules for which packages are considered deprecated
+  - Useful tool, but can also be difficult to maintain, due to it's approach to do "everything"
+
+#### Blockers / Questions
+
+- Need to find a way later to figure out which package is the current one, to include it in `requirements.txt` for the Dockerfile
+
+#### Next steps
+
+- Check the whole app one more time, test a couple times
+  - If everything works fine => update dockerfile
+
 ## 📅 July 13, 2025
 
 #### Done
